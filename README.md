@@ -22,4 +22,8 @@ Inference:
 
 Files to be executed: sampling.py , sampling_cfg.py
 
+Evaluation:
+
+FID values are computed based on this repo: [pytorch-fid](https://github.com/mseitzer/pytorch-fid)
+
 Note: This codebase is inspired form the original DiT implementation and [ExplainingAI](https://github.com/explainingai-code/DiT-PyTorch/tree/main)
