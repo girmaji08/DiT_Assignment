@@ -1,0 +1,36 @@
+dataset_params:
+  dataset_name : 'imagenet-mini'
+  use_latent_features : True
+  num_classes : 1000
+  img_folder_path: '/home/rohit/imagenet-mini'
+  imagenet_img_resize : 256
+  latent_maps_path : '/home/rohit/DiT/latent_maps/imagenet-mini'
+
+diffusion_forward_params:
+  num_timesteps : 1000
+  beta_start : 0.0001
+  beta_end : 0.02
+
+dit_model_params:
+  patch_height : 2
+  patch_width : 2
+  img_height : 32
+  img_width : 32
+  num_channels : 3
+  embed_dim : 768
+  num_heads : 8
+  num_layers : 8
+  batch_size : 128
+  latent_channels : 4
+  use_cfg : True
+  use_cond : True
+  cfg_weight : 5
+  cfg_drop_prob : 0.1
+  num_classes : 1000
+
+train_params:
+  num_epochs : 200
+  batch_size : 128
+  learning_rate : 1e-4
+  num_classes : 1000
+  num_samples : 1

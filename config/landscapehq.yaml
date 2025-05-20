@@ -1,0 +1,35 @@
+dataset_params:
+  dataset_name : 'landscapehq'
+  img_folder_path: '/home/sid/LHQ256/lhq_256'
+  landscape_img_resize : 256
+  use_latent_features : True
+  latent_maps_path : '/home/sid/DiT/latent_maps/landscapehq'
+
+
+diffusion_forward_params:
+  num_timesteps : 1000
+  beta_start : 0.0001
+  beta_end : 0.02
+
+dit_model_params:
+  patch_height : 2
+  patch_width : 2
+  img_height : 32
+  img_width : 32
+  num_channels : 3
+  embed_dim : 384
+  num_heads : 6
+  num_layers : 6
+  batch_size : 128
+  latent_channels : 4
+  use_cfg : False
+  use_cond : False
+  cfg_weight : 0
+  cfg_drop_prob : 0
+
+train_params:
+  num_epochs : 150
+  batch_size : 128
+  learning_rate : 1e-4
+  num_samples : 10
+
