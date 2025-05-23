@@ -11,7 +11,9 @@ Training:
 
 File to be executed: train.py
 For training latent_maps for the input images are needed. You can download them from this [link]().
+
 Please put them in the latent_maps folder: /repo_name/latent_maps/<dataset_name>/*.pt
+
 Run bash script: run_train.sh. save_root_path and config_file arguments need to be given accordingly.
 
 Inference:
