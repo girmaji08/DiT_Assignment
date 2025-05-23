@@ -5,9 +5,9 @@ class DDPMSampler:
 
     def __init__(self, args):
 
-        self.num_timesteps = args["num_timesteps"]
-        self.beta_start = args["beta_start"]
-        self.beta_end = args["beta_end"]
+        num_timesteps = args["num_timesteps"]
+        beta_start = args["beta_start"]
+        beta_end = args["beta_end"]
 
         self.betas = torch.linspace(beta_start, beta_end, num_timesteps)
         self.alphas = 1. - self.betas
@@ -15,8 +15,7 @@ class DDPMSampler:
         self.sqrt_alpha_cum_prod = torch.sqrt(self.alpha_cum_prod)
         self.sqrt_one_minus_alpha_cum_prod = torch.sqrt(1 - self.alpha_cum_prod)
 
-r"""Forward Process. Computes xt using original image and guassian white noise. 
-    """
+    r"""Forward Process. Computes xt using original image and guassian white noise."""
     def add_noise(self, original, noise, t):
 
         original_shape = original.shape
@@ -34,10 +33,10 @@ r"""Forward Process. Computes xt using original image and guassian white noise.
         # Apply and Return Forward process equation
         return (sqrt_alpha_cum_prod.to(original.device) * original + sqrt_one_minus_alpha_cum_prod.to(original.device) * noise)
 
-r"""Reverse Process. Samples xt-1 for a given xt. 
-    It starts with white noise. 
-    This function computes mean and variance using given xt and predicted noise. Using reparametrization trick we compute the xt-1 
-    """
+    r"""Reverse Process. Samples xt-1 for a given xt. 
+        It starts with white noise. 
+        This function computes mean and variance using given xt and predicted noise. Using reparametrization trick we compute the xt-1 
+        """
     def sample_prev_timestep(self, xt, pred, t):  
 
         x0 = ((xt - (self.sqrt_one_minus_alpha_cum_prod.to(xt.device)[t] * pred)) /

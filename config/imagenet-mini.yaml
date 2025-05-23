@@ -4,7 +4,7 @@ dataset_params:
   num_classes : 1000
   img_folder_path: '/home/rohit/imagenet-mini'
   imagenet_img_resize : 256
-  latent_maps_path : '/home/rohit/DiT/latent_maps/imagenet-mini'
+  latent_maps_path : '/home/rohit/DiT_Assignment/latent_maps/imagenet-mini'
 
 diffusion_forward_params:
   num_timesteps : 1000
@@ -24,7 +24,7 @@ dit_model_params:
   latent_channels : 4
   use_cfg : True
   use_cond : True
-  cfg_weight : 5
+  cfg_weight : 1
   cfg_drop_prob : 0.1
   num_classes : 1000
 

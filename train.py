@@ -8,7 +8,7 @@ from os.path import join
 import numpy as np
 from tqdm import tqdm
 from torch.optim import AdamW
-from dataset import LandscapesDataset
+from dataset import LandscapesDataset,ImageNetMiniDataset
 from torch.utils.data import DataLoader
 from model import DiT
 
@@ -19,6 +19,9 @@ import matplotlib.pyplot as plt
 import torchvision.transforms as transforms
 import torchvision
 import glob
+from utils import load_latents_imagenet_mini
+
+
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 if torch.backends.mps.is_available():
     device = torch.device('mps')
@@ -44,9 +47,7 @@ def train(args):
     train_config = config['train_params']
 
     # Create the noise scheduler
-    scheduler = DDPMSampler(num_timesteps=diffusion_config['num_timesteps'],
-                                     beta_start=diffusion_config['beta_start'],
-                                     beta_end=diffusion_config['beta_end'])
+    scheduler = DDPMSampler(diffusion_config)
 
 
     if dataset_config['dataset_name'] == 'landscapehq':
@@ -54,12 +55,12 @@ def train(args):
 
         train_loader = DataLoader(im_dataset,
                                 batch_size=train_config['batch_size'],
-                                shuffle=True)
+                                shuffle=True, num_workers=8, pin_memory=True)
 
     if dataset_config['dataset_name'] == 'imagenet-mini':
         
-        train_dir = join(args.dataset_root_path, 'train')
-        val_dir = join(args.dataset_root_path, 'val')
+        train_dir = join(dataset_config["img_folder_path"], 'train')
+        val_dir = join(dataset_config["img_folder_path"], 'val')
         
         imagenet_transform = transforms.Compose([
             transforms.Resize((256,256)),
@@ -97,6 +98,8 @@ def train(args):
     num_epochs = train_config['num_epochs']
 
     ### The AdamW optimizer is used for training
+
+    learning_rate = float(train_config['learning_rate'])
     
     optimizer = AdamW(model.parameters(), lr=learning_rate, weight_decay=0)
 
@@ -185,7 +188,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Arguments for DiT training')
     parser.add_argument('--config_file', type=str, default= '/home/sid/DiT/config/landscapehq.yaml', help='Path to the config file')
     parser.add_argument('--save_root_path',default= '/home/sid/DiT/results', type=str)
-    parser.add_argument('--dataset_root_path',default= '/home/rohit/imagenet-mini', type=str)
+    # parser.add_argument('--dataset_root_path',default= '/home/rohit/imagenet-mini', type=str)
     args = parser.parse_args()
 
 

@@ -126,8 +126,10 @@ class TimeEmbedding(nn.Module):
 
         d_model = embed_dim
         
+        #Frequency
         w = torch.exp(- math.log(10000) * torch.arange(start=0, end= d_model // 2, dtype=torch.float32) / (d_model // 2)).to(t.device)
 
+        # Frequency * time/position
         w_t = t[:, None].repeat(1, embed_dim // 2) * w
 
 
@@ -162,6 +164,7 @@ class LabelEmbedding(nn.Module):
         if self.training and self.cfg_drop_prob > 0 and self.use_cfg:  # CFG logic implementation of dropping labels randomly
             
             # print("Labels are being dropped during training")
+
             drop_labels_bool = torch.randn(labels.shape[0]).to(labels.device) < self.cfg_drop_prob
 
             final_labels = torch.where(drop_labels_bool,self.num_classes,labels)
@@ -171,7 +174,9 @@ class LabelEmbedding(nn.Module):
             return label_embeddings
 
         else:      # The case of full conditional training and inference
+            
             # print(" Labels are not dropped during inference")
+
             return self.label_embeddings(labels)
 
 
@@ -287,7 +292,9 @@ class DiT(nn.Module):
     def __init__(self, args):
         super().__init__()
 
-        num_layers = args['num_layers']
+        print(args)
+
+        self.num_layers = args['num_layers']
         self.image_height = args["img_height"]
         self.image_width = args["img_width"]
         self.im_channels = args["latent_channels"]
@@ -309,14 +316,14 @@ class DiT(nn.Module):
 
         self.time_embed_layer = TimeEmbedding(args)
 
-        if self.use_cond:    # This is for unconditioning on the labels. We use labels for the conditioning case 
+        if self.use_cond:    # This is for conditioning on the labels. We use labels for the conditioning case 
             self.label_embed_layer = LabelEmbedding(args)
 
 
 
         # All Transformer Layers
         self.layers = nn.ModuleList([
-            TransformerBlock(args) for _ in range(num_layers)
+            TransformerBlock(args) for _ in range(self.num_layers)
         ])
 
         # Final normalization for unpatchify block
@@ -388,10 +395,11 @@ class DiT(nn.Module):
 
         noise_pred = self.forward(x_noise_duplicated, t, y)
 
-        
+        # print("Doing CFG")
+
         cond_noise_pred, uncond_noise_pred = torch.split(noise_pred, len(noise_pred) // 2, dim=0)
 
-        final_noise_pred = uncond_noise_pred + cfg_weight * (cond_noise_pred - uncond_noise_pred)
+        final_noise_pred = uncond_noise_pred + cfg_weight * (cond_noise_pred - uncond_noise_pred) # The main logic of combining unconditional and conditional predictions using guidance weight
 
         final_noise_pred = torch.cat([final_noise_pred, final_noise_pred], dim=0)
 

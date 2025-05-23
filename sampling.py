@@ -52,11 +52,13 @@ def sample(model, scheduler, train_config, dit_model_config, diffusion_config, d
 
         if i != 0:
 
-            xt = xt_prev  # Final clean image at the end of reverse diffusion
+            xt = xt_prev  
             
         else:
 
-            ims = xt_prev
+            print("Getting the final clean image.")
+
+            ims = xt_prev # Final clean image at the end of reverse diffusion
 
             with torch.no_grad():
 
@@ -72,10 +74,14 @@ def sample(model, scheduler, train_config, dit_model_config, diffusion_config, d
             if not os.path.exists(join(args.save_root_path, 'samples',dataset_config["dataset_name"])):
                 os.mkdir(join(args.save_root_path, 'samples',dataset_config["dataset_name"]))
 
-            if i == 0:
+            # if i == 0:
                  # For saving the generated images
-                for j, img_ in enumerate(ims):
-                    save_image(img_, join(args.save_root_path, 'samples',dataset_config["dataset_name"],f'{save_tag}_x0_{batch_num*10 + j + 1}.png'))
+            save_tag = f"{dataset_config['dataset_name']} {float(train_config['learning_rate'])} {diffusion_config['num_timesteps']} {train_config['num_epochs']} {dit_model_config['num_layers']} {dit_model_config['num_heads']} {dit_model_config['patch_height']}".replace(" ", "_")
+            
+            show_image_grid(ims,save_path = join(args.save_root_path, 'samples',dataset_config["dataset_name"], save_tag + '_x0_grid_{}.png'.format(i)))
+            
+            for j, img_ in enumerate(ims):
+                save_image(img_, join(args.save_root_path, 'samples',dataset_config["dataset_name"],f'{save_tag}_x0_{batch_num*10 + j + 1}.png'))
 
 def infer(args,batch_num):
     # Read the config file #
@@ -127,7 +133,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     start = time.time()
-    for batch_num in range(1000):  # THis is for 10K samples. Running a batch of 10 samples at a time.
+    
+    for batch_num in range(1):  # THis is for 10K samples. Running a batch of 10 samples at a time due to memory issues.
         infer(args,batch_num)
 
     print("Total Time Taken: ", time.time() - start)

@@ -143,7 +143,7 @@ def load_latents_imagenet_mini(img_paths_list):
     for path in img_paths_list:
         image_file_name = path.split('/')[-1].split('.')[0]
         class_name = path.split('/')[-2]
-        latent_map_path = join('/home/rohit/DiT/latent_maps/imagenet-mini',class_name,image_file_name + '_latent.pt')
+        latent_map_path = join(os.path.expanduser('~/DiT_Assignment/latent_maps/imagenet-mini'),class_name,image_file_name + '_latent.pt')
 
         latent_maps = torch.load(latent_map_path)
 

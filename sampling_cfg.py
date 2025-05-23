@@ -24,13 +24,15 @@ if torch.backends.mps.is_available():
     print('Using mps')
 
 
-def sample(model, scheduler, train_config, dit_model_config, diffusion_config, dataset_config):
+def sample(model, scheduler, train_config, dit_model_config, diffusion_config, dataset_config, class_labels_list = [11,21,31,41,45]):
 
     latent_height = dit_model_config["img_height"]
     latent_width = dit_model_config["img_width"]
 
-    class_labels = [1,2,3,4,5]
+    class_labels = [int(label) for label in class_labels_list]
+
     n = len(class_labels)
+
     xt = torch.randn(n, dit_model_config['latent_channels'], latent_height, latent_width, device=device)
     y = torch.tensor(class_labels, device=device)
 
@@ -57,7 +59,8 @@ def sample(model, scheduler, train_config, dit_model_config, diffusion_config, d
             xt = xt_prev
             
         else:
-
+            
+            print(" Getting the final Clean Image ")
             ims = xt_prev
 
             ims = vae.to(device).decode(ims).sample
@@ -74,9 +77,17 @@ def sample(model, scheduler, train_config, dit_model_config, diffusion_config, d
             if not os.path.exists(join(args.save_root_path, 'samples',dataset_config["dataset_name"])):
                 os.mkdir(join(args.save_root_path, 'samples',dataset_config["dataset_name"]))
 
-            if i == 0:
-                 for j, img_ in enumerate(ims):
-                    save_image(img_, join(args.save_root_path, 'samples',dataset_config["dataset_name"],f'{save_tag}_x0_{j}.png'))
+            # if i == 0:
+
+            save_tag = f"{dataset_config['dataset_name']} {float(train_config['learning_rate'])} {diffusion_config['num_timesteps']} {train_config['num_epochs']} {dit_model_config['num_layers']} {dit_model_config['num_heads']} {dit_model_config['patch_height']}".replace(" ", "_")
+            
+            show_image_grid(ims.chunk(2,dim=0)[0],save_path = join(args.save_root_path, 'samples',dataset_config["dataset_name"], save_tag + '_x0_grid_{}.png'.format(i)))
+
+            # for j, img_ in enumerate(ims):
+            #     save_image(img_, join(args.save_root_path, 'samples',dataset_config["dataset_name"],f'{save_tag}_x0_{j}.png'))
+
+    print("Inference complete!!!")
+
 
 def infer(args):
     # Read the config file #
@@ -94,10 +105,9 @@ def infer(args):
     train_config = config['train_params']
 
     # Create the noise scheduler
-    scheduler = DDPMSampler(num_timesteps=diffusion_config['num_timesteps'],
-                                     beta_start=diffusion_config['beta_start'],
-                                     beta_end=diffusion_config['beta_end'])
+    scheduler = DDPMSampler(diffusion_config)
 
+    # Initializing the pretrained model for inference\
 
     model = DiT(dit_model_config).to(device)
 
@@ -106,27 +116,37 @@ def infer(args):
 
     save_tag = f"{dataset_config['dataset_name']} {float(train_config['learning_rate'])} {diffusion_config['num_timesteps']} {train_config['num_epochs']} {dit_model_config['num_layers']} {dit_model_config['num_heads']} {dit_model_config['patch_height']}".replace(" ", "_")
 
-    print(save_tag)
+    # print(save_tag)
+
+    # print(join(args.save_root_path, 'models',save_tag + '_dit_model.pth'))
 
     assert os.path.exists(join(args.save_root_path, 'models',save_tag + '_dit_model.pth'))
 
      
-    
+    # Loading the pretrained checkpoint 
+
     model.load_state_dict(torch.load(join(args.save_root_path,'models', save_tag + '_dit_model.pth'),
                                      map_location=device))
     print('Loaded dit checkpoint')
 
 
-
+    # The reverse sampling process to get the clean image
     with torch.no_grad():
-        sample(model, scheduler, train_config, dit_model_config, diffusion_config, dataset_config)
+        sample(model, scheduler, train_config, dit_model_config, diffusion_config, dataset_config,args.class_labels_list.split(','))
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Arguments for dit image generation')
     parser.add_argument('--config_file',default= '/home/rohit/DiT/config/cifar10.yaml', type=str)
-        parser.add_argument('--save_root_path',default= '/home/rohit/DiT/results/', type=str)
+    parser.add_argument('--save_root_path',default= '/home/rohit/DiT/results/', type=str)
+    parser.add_argument('--class_labels_list',default= '11,21,31,41,45,51,61,71,81', type=str) # comma separated list of class labels
+
     args = parser.parse_args()
+
+
+    print("Class labels list are :", args.class_labels_list.split(","))
+
+
     infer(args)
 
 
