@@ -1,22 +1,18 @@
-# DiT_Assignment
+# Implementation of Diffusion Transformer (DiT). Experimentations with DDIM sampler. Experimentation with classifier-free guidance.
 
-Question1 : DDPM_Sampler.py, model.py
+Data Preparation:
 
-Question2 : model.py
+Datasets considered: [ImageNet-Mini](https://www.kaggle.com/datasets/ifigotin/imagenetmini-1000/data), [LandscapesHQ256](https://github.com/universome/alis/blob/master/lhq.md).
 
-Question3 : train.py, dataset.py
+Download the datasets from the above links.
 
-Question4 : DDIM.py, sampling.py
-
-Question5 : model.py, sampling_cfg.py
 
 Training: 
 
 File to be executed: train.py
-
-For Training precomputed latent maps and dataset is needed.
-
-Datasets considered: [ImageNet-Mini](https://www.kaggle.com/datasets/ifigotin/imagenetmini-1000/data), [LandscapesHQ256](https://github.com/universome/alis/blob/master/lhq.md)
+For training latent_maps for the input images are needed. You can download them from this [link]().
+Please put them in the latent_maps folder: /repo_name/latent_maps/<dataset_name>/*.pt
+Run bash script: run_train.sh. save_root_path and config_file arguments need to be given accordingly.
 
 Inference:
 
