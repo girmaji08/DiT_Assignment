@@ -1,12 +1,14 @@
 # Implementation of Diffusion Transformer (DiT). Experimentation with DDIM sampler. Experimentation with classifier-free guidance.
 
-Data Preparation:
+## **Data Preparation:**
 
-Datasets considered: [ImageNet-Mini](https://www.kaggle.com/datasets/ifigotin/imagenetmini-1000/data), [LandscapesHQ256](https://github.com/universome/alis/blob/master/lhq.md).
+- Datasets considered: [ImageNet-Mini](https://www.kaggle.com/datasets/ifigotin/imagenetmini-1000/data), [LandscapesHQ256](https://github.com/universome/alis/blob/master/lhq.md).
 
-The LandscapesHQ dataset consists of 90,000 images. It is split into 80,000 training and 10,000 test images. The indices for images in the test set are present in ***landscapehq_test_indices.npy*** file.
+- The LandscapesHQ dataset consists of 90,000 images. It is split into 80,000 training and 10,000 test images. The indices for images in the test set are present in ***landscapehq_test_indices.npy*** file.
 
-The ImageNet-mini comes with its own train and val split. It consists of approximately 34k images in the training set.
+- The ImageNet-mini comes with its own train and val split. It consists of approximately 34k images in the training set.
+
+Follow these steps to prepare the input data for training.
 
 1. Download the datasets from the above links.
 
@@ -16,7 +18,7 @@ The ImageNet-mini comes with its own train and val split. It consists of approxi
 
 Make sure to specify the path to the dataset folder in the corresponding YAML configuration files. Ensure the latent maps path is correctly set in the YAML config files as well.
 
-Training:
+## **Training:**
 
 Set up the Conda virtual environment using the following steps:
 ```
@@ -39,7 +41,7 @@ cd ~/DiT_Assignment
 python train.py --config_file ./config/imagenet-mini.yaml --save_root_path <full_path_to_save_results>
 ```
 
-Inference:
+## **Inference:**
 
 To run CFG on the imagenet-mini trained DiT model.
 
@@ -54,7 +56,7 @@ To run DDPM sampling on the LandscapesHQ-trained DiT model.
 cd ~/DiT_Assignment
 python sampling.py --config_file ./config/<config_file_name>.yaml --save_root_path <full_path_to_save_results>
 ```
-Evaluation:
+## **Evaluation:**
 
 FID values are computed based on this repo: [pytorch-fid](https://github.com/mseitzer/pytorch-fid)
 
