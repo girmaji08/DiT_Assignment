@@ -14,7 +14,7 @@ Follow these steps to prepare the input data for training.
 
 2. Latent maps are required for training with the input images. You can download them from this [link](https://drive.google.com/file/d/168QveHjpkI-TuTU9OMZo3Hxz-4Cpf17f/view?usp=sharing). 
 
-3. After downloading, place the latent maps in the following directory: /DiT_Assignment/latent_maps/
+3. After downloading, place the latent maps in the following directory: /DiT_DDIM_CFG/latent_maps/
 
 Make sure to specify the path to the dataset folder in the corresponding YAML configuration files. Ensure the latent maps path is correctly set in the YAML config files as well.
 
