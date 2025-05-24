@@ -4,35 +4,38 @@ Data Preparation:
 
 Datasets considered: [ImageNet-Mini](https://www.kaggle.com/datasets/ifigotin/imagenetmini-1000/data), [LandscapesHQ256](https://github.com/universome/alis/blob/master/lhq.md).
 
-Download the datasets from the above links.
+The LandscapesHQ dataset consists of 90,000 images. It is split into 80,000 training and 10,000 test images. The indices for images in the test set are present in ***landscapehq_test_indices.npy*** file.
 
-LandscapesHQ dataset consists of 90,000 images. It is split into 80,000 train and 10,000 test images. The indices for images in test set is present in 'landscapehq_test_indices.npy' file.
+The ImageNet-mini comes with its own train and val split. It consists of approximately 34k images in the training set.
 
-ImageNet-mini comes with its own train and val split. It consists of approx 34k images in train set.
+1. Download the datasets from the above links.
 
+2. Latent maps are required for training with the input images. You can download them from this [link](https://drive.google.com/file/d/168QveHjpkI-TuTU9OMZo3Hxz-4Cpf17f/view?usp=sharing). 
 
-Training: 
+3. After downloading, place the latent maps in the following directory: /DiT_Assignment/latent_maps/
 
-1. For training latent_maps for the input images are needed. You can download them from this [link](https://drive.google.com/file/d/168QveHjpkI-TuTU9OMZo3Hxz-4Cpf17f/view?usp=sharing).(Path to the dataset folder should be given in the yaml config files.
+Make sure to specify the path to the dataset folder in the corresponding YAML configuration files. Ensure the latent maps path is correctly set in the YAML config files as well.
 
-2. Put them in the latent_maps folder: /DiT_Assignment/latent_maps/ (this path should be given in the config yaml files.)
+Training:
 
+Set up the Conda virtual environment using the following steps:
 ```
 conda env create -f DL_environment.yml
 
 conda activate DL
 
-cd ~/DiT_Assignment
 ```
 For unconditional training on the  LandscapesHQ dataset.
 
 ```
+cd ~/DiT_Assignment
 python train.py --config_file ./config/landscapehq.yaml --save_root_path <full_path_to_save_results>
 ```
 
 For the label conditioned with dropout training for CFG on the ImageNet-mini dataset.
 
 ```
+cd ~/DiT_Assignment
 python train.py --config_file ./config/imagenet-mini.yaml --save_root_path <full_path_to_save_results>
 ```
 
