@@ -6,6 +6,10 @@ Datasets considered: [ImageNet-Mini](https://www.kaggle.com/datasets/ifigotin/im
 
 Download the datasets from the above links.
 
+LandscapesHQ dataset consists of 90,000 images. It is split into 80,000 train and 10,000 test images. The indices for images in test set is present in 'landscapehq_test_indices.npy' file.
+
+ImageNet-mini comes with its own train and val split. It consists of approx 34k images in train set.
+
 
 Training: 
 
