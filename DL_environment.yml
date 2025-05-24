@@ -9,4 +9,3 @@ dependencies:
   - libstdcxx-ng
   - numpy
   - scipy
-prefix: /home/rohit/miniconda3/envs/DL
