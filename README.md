@@ -30,14 +30,14 @@ conda activate DL
 For unconditional training on the  LandscapesHQ dataset.
 
 ```
-cd ~/DiT_Assignment
+cd ~/DiT_DDIM_CFG
 python train.py --config_file ./config/landscapehq.yaml --save_root_path <full_path_to_save_results>
 ```
 
 For the label conditioned with dropout training for CFG on the ImageNet-mini dataset.
 
 ```
-cd ~/DiT_Assignment
+cd ~/DiT_DDIM_CFG
 python train.py --config_file ./config/imagenet-mini.yaml --save_root_path <full_path_to_save_results>
 ```
 
@@ -46,14 +46,14 @@ python train.py --config_file ./config/imagenet-mini.yaml --save_root_path <full
 To run CFG on the imagenet-mini trained DiT model.
 
 ```
-cd ~/DiT_Assignment
+cd ~/DiT_DDIM_CFG
 python sampling_cfg.py --config_file ./config/<config_file_name>.yaml --save_root_path <full_path_to_save_results>
 ```
 
 To run DDPM sampling on the LandscapesHQ-trained DiT model.
 
 ```
-cd ~/DiT_Assignment
+cd ~/DiT_DDIM_CFG
 python sampling.py --config_file ./config/<config_file_name>.yaml --save_root_path <full_path_to_save_results>
 ```
 ## **Evaluation:**
