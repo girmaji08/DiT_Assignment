@@ -1,4 +1,8 @@
-# Implementation of Diffusion Transformer (DiT). Implementation of DDIM sampler. Experimentation with classifier-free guidance.
+# Implementation of Diffusion Transformer (DiT). 
+
+# Implementation of DDIM sampler. 
+
+# Experimentation with classifier-free guidance.
 
 ## **Data Preparation:**
 
