@@ -56,6 +56,14 @@ To run DDPM sampling on the LandscapesHQ-trained DiT model.
 cd ~/DiT_DDIM_CFG
 python sampling.py --config_file ./config/<config_file_name>.yaml --save_root_path <full_path_to_save_results>
 ```
+
+To run DDIM Sampler on the LandscapesHQ-trained DiT model.
+
+```
+cd ~/DiT_DDIM_CFG
+python sampling_ddim.py --config_file ./config/<config_file_name>.yaml --save_root_path <full_path_to_save_results>
+```
+
 ## **Evaluation:**
 
 FID values are computed based on this repo: [pytorch-fid](https://github.com/mseitzer/pytorch-fid)
